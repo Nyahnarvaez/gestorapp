@@ -1,0 +1,992 @@
+/* ==================== Estilos Globales ==================== */
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+body{
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    color: #333;
+    line-height: 1.6;
+    background-color: #f5f5dc;
+}
+h1{ font-size: 2.5em; }
+h2{ font-size: 1.8em; }
+h3{ font-size: 1.4em; }
+p{ font-size: 1em; }
+ul{ list-style: none; padding: 0; margin: 0; }
+li{ font-size: 1em; }
+.container{ max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.color-acento{ color:#8e44ad; }
+.color-rojo { color: #e74c3c; } /* Asegúrate de que este color esté definido para transacciones negativas */
+
+/* ==================== Botón de Cerrar Sesión ==================== */
+.logout-button {
+    background-color: #e74c3c; /* Un color rojo para la acción de cerrar sesión */
+    color: white;
+    padding: 0.4em 0.8em; /* Mismos paddings que los enlaces de navegación */
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em; /* Mismo tamaño de fuente que los enlaces */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Roboto', sans-serif; /* Asegurar la misma fuente */
+    font-weight: 500; /* Mismo peso de fuente */
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
+}
+
+/* Ajustes responsivos para el botón de Cerrar Sesión */
+@media (max-width: 699px) {
+    .logout-button {
+        font-size: 0.9em;
+        padding: 8px 12px;
+        margin-top: 10px; /* Para separarlo de los enlaces en móviles si la navegación es column */
+        width: 100%; /* Ocupa todo el ancho disponible si la nav es column */
+    }
+}
+
+
+/* ==================== Header ==================== */
+header{
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    transition: background-color 0.3s ease, border-radius 0.3s ease;
+    display: block; /* Por defecto visible */
+}
+
+header .container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row; /* Mantener por defecto para desktop */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+}
+
+header .logo{
+    margin: 0;
+    padding: 0;
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.9em;
+    letter-spacing: 0.8px;
+    flex-shrink: 0; /* Evitar que el logo se encoja */
+    /* NUEVO: Estilos para el logo con imagen */
+    display: flex; /* Permite que el icono y el texto se alineen */
+    align-items: center; /* Centra verticalmente el icono y el texto */
+    gap: 10px; /* Espacio entre el icono y el texto */
+}
+
+.logo-img {
+    height: 40px; /* Ajusta la altura de tu icono según el tamaño deseado */
+    width: auto; /* Mantiene la proporción de la imagen */
+    vertical-align: middle; /* Alinea la imagen con el texto si fuera necesario */
+}
+
+
+header nav ul {
+    display: flex;
+    gap: 2.2em;
+}
+
+header nav a{
+    font-size: 1.1em;
+    padding: 0.4em 0.8em;
+    text-decoration: none;
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s ease;
+    border-radius: 5px;
+}
+
+header nav a:hover{
+    color: #8e44ad;
+    background-color: rgba(142, 68, 173, 0.1);
+}
+
+/* ==================== Main y Sección General ==================== */
+/* Ajuste de padding-top para dejar espacio al header fijo en pantallas grandes */
+main.container_p { padding-top: 100px; padding: 20px; }
+section.container_s { margin-bottom: 30px; }
+.contenedor { padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05); }
+.texto-contenedor { margin-bottom: 20px; }
+.texto { line-height: 1.7; color: #555; }
+.imagen { min-height: 200px; border-radius: 8px; overflow: hidden; }
+.imagen img { display: block; width: 100%; height: auto; object-fit: cover; border-radius: 8px; }
+
+/* ==================== Sección de Inicio ==================== */
+.contenedor-inicio {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+    border-radius: 12px;
+    background-color: #f8f8f8;
+    flex-direction: row; /* Por defecto, en fila para desktop */
+}
+
+.contenedor-inicio .texto-contenedor {
+    flex: 1; /* Permite que el texto ocupe el espacio disponible */
+    min-width: 300px; /* Evita que el texto se encoja demasiado en desktop */
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.contenedor-inicio .imagen {
+    flex: 1; /* Permite que la imagen ocupe el espacio disponible */
+    min-width: 250px; /* Evita que la imagen se encoja demasiado en desktop */
+    height: 450px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.contenedor-inicio .imagen img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* ==================== Sección de Productos y Almacen ==================== */
+#almacen .contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    border-radius: 12px;
+    background-color: #f8f8f8;
+}
+
+#almacen .contenedor h2,
+#almacen .contenedor p,
+#almacen .contenedor .agregar-producto {
+    text-align: center;
+    width: 100%;
+}
+
+.agregar-producto {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: #8e44ad;
+    color: white;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.agregar-producto:hover {
+    background-color: #219653;
+}
+
+.listado-productos {
+    margin-top: 20px;
+    overflow-x: auto; /* IMPORTANTE para tablas responsivas */
+    width: 100%; /* Asegura que ocupe el ancho disponible */
+}
+
+.listado-productos table {
+    width: 100%; /* Ocupa el 100% del contenedor con overflow */
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+    min-width: 650px; /* Define un ancho mínimo para la tabla, que se desplaza si es necesario */
+}
+
+.listado-productos th,
+.listado-productos td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.listado-productos th {
+    font-weight: bold;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.listado-productos tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.listado-productos .boton-accion {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-right: 5px;
+    white-space: nowrap; /* Evita que los botones se rompan en varias líneas */
+}
+
+.listado-productos .boton-accion:hover {
+    opacity: 0.8;
+}
+
+.listado-productos .boton-accion.editar-producto {
+    background-color: #f39c12;
+    color: white;
+}
+
+.listado-productos .boton-accion.editar-producto:hover {
+    background-color: #e67e22;
+}
+
+.listado-productos .boton-accion.eliminar-producto {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.listado-productos .boton-accion.eliminar-producto:hover {
+    background-color: #c0392b;
+}
+
+/* NUEVO: Estilo para el botón de Proveedor en la tabla */
+.listado-productos .boton-accion.editar-proveedor {
+    background-color: #3498db; /* Un color azul para el botón de proveedor */
+    color: white;
+}
+
+.listado-productos .boton-accion.editar-proveedor:hover {
+    background-color: #2980b9;
+}
+
+
+/* ==================== Modal de Añadir Nuevo Producto y Editar Proveedor ==================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 101; /* Asegura que el modal esté por encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos para formularios dentro de modales */
+#form-nuevo-producto,
+#form-editar-proveedor { /* APLICADO A AMBOS FORMULARIOS DE MODALES */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#form-nuevo-producto div,
+#form-editar-proveedor div { /* APLICADO A AMBOS FORMULARIOS DE MODALES */
+    display: flex;
+    flex-direction: column;
+}
+
+#form-nuevo-producto label,
+#form-editar-proveedor label { /* APLICADO A AMBOS FORMULARIOS DE MODALES */
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+#form-nuevo-producto input[type=text],
+#form-nuevo-producto input[type=number],
+#form-nuevo-producto input[type=date],
+#form-editar-proveedor input[type=text] { /* APLICADO A AMBOS FORMULARIOS DE MODALES */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#form-nuevo-producto input[type=text]:focus,
+#form-nuevo-producto input[type=number]:focus,
+#form-nuevo-producto input[type=date]:focus,
+#form-editar-proveedor input[type=text]:focus { /* APLICADO A AMBOS FORMULARIOS DE MODALES */
+    outline: none;
+    border-color: #8e44ad;
+    box-shadow: 0 0 5px rgba(142, 68, 173, 0.5);
+}
+
+.guardar-producto { /* Botón de guardar para ambos modales (nuevo y editar proveedor) */
+    background-color: #8e44ad;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.guardar-producto:hover {
+    background-color: #7b389b;
+}
+
+/* ==================== Sección de Contabilidad ==================== */
+#contabilidad .contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 40px;
+    border-radius: 12px;
+    background-color: #f8f8f8;
+}
+
+#contabilidad .contenedor h2 {
+    color: #2c3e50;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#contabilidad .contenedor h2 i {
+    margin-right: 0.5em;
+}
+
+.fondo-banco {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.fondo-banco h3 {
+    color: #8e44ad;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.fondo-banco h3 i {
+    margin-right: 0.3em;
+}
+
+.saldo-banco {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #27ae60;
+    margin-bottom: 5px;
+}
+
+.saldo-banco .monto {
+    font-size: 1.5em;
+}
+
+.saldo-banco i {
+    margin-left: 0.3em;
+}
+
+.nota-banco {
+    font-size: 0.9em;
+    color: #777;
+}
+
+.nota-banco i {
+    margin-right: 0.3em;
+}
+
+.gestion-transacciones {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    overflow-x: auto; /* IMPORTANTE para tablas responsivas */
+    margin-bottom: 20px;
+}
+
+.gestion-transacciones h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.gestion-transacciones h3 i {
+    margin-right: 0.5em;
+}
+
+.listado-transacciones {
+    width: 100%; /* Ocupa el 100% del contenedor con overflow */
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+    min-width: 600px; /* Define un ancho mínimo para la tabla */
+}
+
+.listado-transacciones th,
+.listado-transacciones td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.listado-transacciones th {
+    font-weight: bold;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.listado-transacciones tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#form-nueva-transaccion {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+
+#form-nueva-transaccion .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#form-nueva-transaccion label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+#form-nueva-transaccion label i {
+    margin-right: 0.3em;
+}
+
+#form-nueva-transaccion input[type=text],
+#form-nueva-transaccion input[type=number],
+#form-nueva-transaccion select,
+#form-nueva-transaccion textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#form-nueva-transaccion input:focus,
+#form-nueva-transaccion select:focus,
+#form-nueva-transaccion textarea:focus {
+    outline: none;
+    border-color: #a444ad;
+    box-shadow: 0 0 5px rgba(142, 68, 173, 0.5);
+}
+
+#form-nueva-transaccion button {
+    background-color: #8e44ad;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    grid-column: 1 / -1;
+}
+
+#form-nueva-transaccion button i {
+    margin-right: 0.3em;
+}
+
+#form-nueva-transaccion button:hover {
+    background-color: #219653;
+}
+
+/* ==================== Sección de Perfil Simplificada ==================== */
+.contenedor-perfil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+.tarjeta-perfil-simple {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.tarjeta-perfil-simple .avatar-contenedor {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    border: 4px solid #f9f9f9;
+    position: relative;
+}
+
+.tarjeta-perfil-simple .avatar-contenedor img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tarjeta-perfil-simple .avatar-contenedor .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.tarjeta-perfil-simple .avatar-contenedor:hover .overlay {
+    opacity: 1;
+}
+
+.tarjeta-perfil-simple .boton-editar-avatar {
+    background-color: #8e44ad;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tarjeta-perfil-simple .boton-editar-avatar:hover {
+    background-color: #7b389b;
+}
+
+.tarjeta-perfil-simple .acciones-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.tarjeta-perfil-simple .acciones-perfil button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.tarjeta-perfil-simple .acciones-perfil .boton-editar {
+    background-color: #f39c12;
+    color: white;
+}
+
+.tarjeta-perfil-simple .acciones-perfil .boton-editar:hover {
+    background-color: #e67e22;
+}
+
+.tarjeta-perfil-simple .acciones-perfil .boton-cambiar-contrasena {
+    background-color: #8e44ad;
+    color: white;
+}
+
+.tarjeta-perfil-simple .acciones-perfil .boton-cambiar-contrasena:hover {
+    background-color: #219653;
+}
+
+/* Estilos para los Modales de Perfil */
+#modal-editar-perfil,
+#modal-cambiar-contrasena {
+    display: none;
+    position: fixed;
+    z-index: 101; /* Asegura que el modal esté por encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+#modal-editar-perfil .modal-content,
+#modal-cambiar-contrasena .modal-content {
+    background-color: #fefefe;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    position: relative;
+}
+
+#modal-editar-perfil h2,
+#modal-cambiar-contrasena h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#modal-editar-perfil h2 i,
+#modal-cambiar-contrasena h2 i {
+    margin-right: 0.5em;
+}
+
+#form-editar-perfil,
+#form-cambiar-contrasena {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#form-editar-perfil .form-group,
+#form-cambiar-contrasena .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#form-editar-perfil label,
+#form-cambiar-contrasena label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+#form-editar-perfil label i,
+#form-cambiar-contrasena label i {
+    margin-right: 0.3em;
+}
+
+#form-editar-perfil input[type=text],
+#form-editar-perfil input[type=email],
+#form-cambiar-contrasena input[type=password] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#form-editar-perfil input:focus,
+#form-editar-perfil input[type=email]:focus,
+#form-cambiar-contrasena input:focus {
+    outline: none;
+    border-color: #8e44ad;
+    box-shadow: 0 0 5px rgba(142, 68, 173, 0.5);
+}
+
+#form-editar-perfil .boton-guardar,
+#form-cambiar-contrasena .boton-guardar {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#form-editar-perfil .boton-guardar:hover,
+#form-cambiar-contrasena .boton-guardar:hover {
+    background-color: #219653;
+}
+
+/* ==================== Footer ==================== */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 0.5em 0;
+    width: 100%;
+    z-index: 99;
+}
+
+footer .container {
+    padding: 0 20px;
+    font-size: 0.9em;
+}
+
+/* Media Query para pantallas hasta 699px (teléfonos, móviles) */
+@media (max-width: 699px) {
+    header {
+        padding: 1em 10px;
+        margin-top: 0; /* Sin margen superior en móviles */
+        border-radius: 0; /* Sin bordes redondeados para ocupar todo el ancho */
+        width: 100%; /* Asegura que ocupe todo el ancho */
+        left: 0; /* Reinicia la posición left */
+    }
+    header .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Ocultar la navegación en móvil si no hay un menú hamburguesa */
+    /* Si decides implementar un menú hamburguesa, esta regla cambiará */
+    header nav {
+        display: block; /* Muestra la navegación para que el botón de logout sea visible */
+        width: 100%; /* Ocupa el ancho completo */
+        text-align: center;
+    }
+
+    header nav ul {
+        flex-direction: column; /* Apila los elementos de la navegación */
+        gap: 10px; /* Espacio entre elementos */
+        margin-top: 10px; /* Espacio entre el logo y los enlaces */
+    }
+
+    header nav ul li {
+        width: 100%; /* Cada elemento ocupa el ancho completo */
+    }
+
+    header nav a, .logout-button {
+        width: 100%; /* Los enlaces y el botón ocupan todo el ancho de su contenedor */
+        display: block; /* Asegura que se comporten como bloques y ocupen el ancho */
+        padding: 8px 12px; /* Ajusta el padding para móviles */
+        text-align: center;
+    }
+
+
+    header .logo {
+        font-size: 1.5em;
+        margin-bottom: 0;
+        width: auto;
+        text-align: center;
+        gap: 5px; /* Menos espacio en pantallas pequeñas para el logo */
+    }
+
+    .logo-img {
+        height: 30px; /* Un poco más pequeño para móviles */
+    }
+
+    main.container_p {
+        padding-top: 70px;
+        padding: 10px;
+    }
+
+    body {
+        font-size: 0.9em;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; }
+    h3 { font-size: 1.1em; }
+
+    .container {
+        padding: 0 10px;
+    }
+
+    section.container_s {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .contenedor-inicio {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 15px;
+        gap: 15px;
+    }
+
+    .contenedor-inicio .texto-contenedor {
+        margin-bottom: 10px;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .contenedor-inicio .imagen {
+        height: 200px;
+        width: 100%;
+        min-width: unset;
+    }
+
+    #form-nuevo-producto input, #form-nuevo-producto select, #form-nuevo-producto input[type=date], #form-nuevo-producto textarea, #form-nueva-transaccion input, #form-nueva-transaccion select, #form-nueva-transaccion textarea, #form-editar-perfil input, #form-editar-perfil select, #form-editar-perfil textarea, #form-cambiar-contrasena input, #form-editar-proveedor input {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .agregar-producto, .guardar-producto, .boton-accion, #form-nueva-transaccion button, .tarjeta-perfil-simple .acciones-perfil button, .boton-editar-avatar, #form-editar-perfil .boton-guardar, #form-cambiar-contrasena .boton-guardar {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    .listado-productos, .gestion-transacciones {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .listado-productos table, .listado-transacciones table {
+        min-width: 500px;
+        font-size: 0.9em;
+    }
+
+    .listado-productos th, .listado-productos td, .listado-transacciones th, .listado-transacciones td {
+        padding: 8px 10px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        padding: 15px;
+    }
+
+    .close-button {
+        font-size: 24px;
+        top: 5px;
+        right: 10px;
+    }
+
+    .tarjeta-perfil-simple {
+        padding: 20px;
+    }
+    .tarjeta-perfil-simple .acciones-perfil {
+        gap: 8px;
+    }
+}
+
+
+/* Media Query para pantallas a partir de 700px (tabletas, laptops, desktop) */
+@media (min-width: 700px) {
+    header {
+        padding: 0.8em 20px;
+        margin-top: 20px; /* Separación de 20px de la parte superior */
+        width: calc(100% - 40px); /* Ajusta el ancho para compensar el margen lateral total (20px izquierda + 20px derecha) */
+        left: 20px; /* Desplaza el header 20px a la derecha para que quede centrado con el ancho ajustado */
+    }
+    header .container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    header nav {
+        display: block;
+    }
+    header nav ul {
+        gap: 2.2em;
+        flex-direction: row;
+    }
+    header .logo {
+        font-size: 1.9em;
+        margin-bottom: 0;
+        gap: 10px; /* Espacio predeterminado para el logo en desktop */
+    }
+
+    .logo-img {
+        height: 40px; /* Altura predeterminada para el logo en desktop */
+    }
+
+    /* Ajustar el padding superior del main para el header fijo */
+    main.container_p { padding-top: 100px; padding: 20px; }
+
+    body {
+        font-size: 1em;
+    }
+    h1 { font-size: 2.5em; }
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.4em; }
+
+    .container {
+        padding: 0 20px;
+    }
+
+    section.container_s {
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    #form-nuevo-producto input, #form-nuevo-producto select, #form-nuevo-producto input[type=date], #form-nuevo-producto textarea, #form-nueva-transaccion input, #form-nueva-transaccion select, #form-nueva-transaccion textarea, #form-editar-perfil input, #form-editar-perfil select, #form-editar-perfil textarea, #form-cambiar-contrasena input, #form-editar-proveedor input {
+        padding: 10px;
+        font-size: 1em;
+    }
+
+    .agregar-producto, .guardar-producto, .boton-accion, #form-nueva-transaccion button, .tarjeta-perfil-simple .acciones-perfil button, .boton-editar-avatar, #form-editar-perfil .boton-guardar, #form-cambiar-contrasena .boton-guardar {
+        padding: 10px 15px;
+        font-size: 1em;
+    }
+
+    .listado-productos, .gestion-transacciones {
+        overflow-x: auto;
+    }
+    .listado-productos table, .listado-transacciones table {
+        min-width: 750px;
+    }
+    .listado-productos th, .listado-productos td, .listado-transacciones th, .listado-transacciones td {
+        padding: 10px 15px;
+    }
+
+    .modal-content {
+        width: 60%;
+        max-width: 600px;
+        margin: 5% auto;
+        padding: 25px;
+    }
+
+    .tarjeta-perfil-simple {
+        max-width: 500px;
+        padding: 40px;
+    }
+    .tarjeta-perfil-simple .acciones-perfil {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+    }
+    .tarjeta-perfil-simple .acciones-perfil button {
+        width: auto;
+        min-width: 150px;
+    }
+}

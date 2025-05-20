@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeestorApp - Tu Plataforma de Gestión</title>
+    <link rel="icon" href="img/icon.png" type="image/png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">
+                <img src="img/icon.png" alt="Logo de GeestorApp" class="logo-img"> Geestor<span class="color-acento">App</span>
+            </h1>
+            <nav class="navigation">
+                <ul>
+                    <li><a class="inicio" href="#inicio">inicio</a></li>
+                    <li><a class="almacen" href="#almacen">Productos y Almacen</a></li>
+                    <li><a class="banco" href="#contabilidad">Contabilidad</a></li>
+                    <li><a class="Perfil" href="#perfil">Perfil</a></li>
+                    <li><a href="/logout" id="logout-button" class="logout-button">Cerrar Sesión</a></li>
+                    </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container_p">
+        <section class="container_s" id="inicio">
+            <div class="contenedor contenedor-inicio">
+                <div class="texto-contenedor">
+                    <h2>Bienvenidos a <span class="color-acento">GeestorApp</span></h2>
+                    <p class="texto">Esta Pagina web esta hecha con la intencion de ayudarte a en tu negocio o emprendimiento a organizar, guardar y digitalizar tus productos y tus finanzas esta pagina estara en constante actualizacion para integrar nuevas funcionalidades y facilitar cada vez mas tu trabajo es ideal para aquellas tiendas independientes o nuevas que nescecitan ayuda</p>
+                </div>
+                <div class="imagen">
+                    <img src="img/Leonardo_Phoenix_10_Create_an_image_that_represents_financial_2.jpg" alt="Imagen representativa">
+                </div>
+            </div>
+        </section>
+
+        <section id="almacen" class="container_s">
+            <div class="contenedor">
+                <h2><i class="fas fa-warehouse"></i> Gestión de Almacén</h2>
+                <p class="texto">Administra tus productos, inventario y proveedores.</p>
+
+                <button class="agregar-producto" id="abrirModalProducto"><i class="fas fa-plus-circle"></i> Agregar Nuevo Producto</button>
+
+                <div class="listado-productos">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Fecha de Vencimiento</th>
+                                <th>Proveedor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-productos-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <div id="modal-nuevo-producto" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2><i class="fas fa-box"></i> Nuevo Producto</h2>
+                <form id="form-nuevo-producto">
+                    <div>
+                        <label for="nombre-producto">Nombre:</label>
+                        <input type="text" id="nombre-producto" required>
+                    </div>
+                    <div>
+                        <label for="cantidad-producto">Cantidad:</label>
+                        <input type="number" id="cantidad-producto" required>
+                    </div>
+                    <div>
+                        <label for="precio-producto">Precio:</label>
+                        <input type="number" id="precio-producto" step="0.01" required>
+                    </div>
+                    <div>
+                        <label for="vencimiento-producto">Fecha de Vencimiento:</label>
+                        <input type="date" id="vencimiento-producto">
+                    </div>
+                    <div>
+                        <label for="proveedor-producto">Proveedor:</label>
+                        <input type="text" id="proveedor-producto" placeholder="Nombre del proveedor">
+                    </div>
+                    <button type="submit" class="guardar-producto"><i class="fas fa-save"></i> Guardar Producto</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="modal-editar-proveedor" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="cerrar-modal-proveedor">&times;</span>
+                <h2><i class="fas fa-industry"></i> Editar Proveedor</h2>
+                <form id="form-editar-proveedor">
+                    <input type="hidden" id="editar-proveedor-id-producto">
+                    <div>
+                        <label for="input-proveedor">Proveedor:</label>
+                        <input type="text" id="input-proveedor" placeholder="Nombre del proveedor" required>
+                    </div>
+                    <button type="submit" class="guardar-producto"><i class="fas fa-save"></i> Guardar Proveedor</button>
+                </form>
+            </div>
+        </div>
+
+        <section class="container_s" id="contabilidad">
+            <div class="contenedor">
+                <h2><i class="fas fa-chart-line color-acento"></i> Contabilidad</h2>
+                <p class="texto-contenedor texto">Gestiona tus finanzas, registra tus transacciones y mantén un control claro de la salud económica de tu negocio.</p>
+
+                <div class="fondo-banco">
+                    <h3><i class="fas fa-university color-acento"></i> Saldo Bancario</h3>
+                    <p class="saldo-banco"><span class="monto" id="saldo-banco">0.00</span> <i class="fas fa-dollar-sign"></i></p>
+                    <p class="nota-banco"><i class="fas fa-info-circle"></i> Saldo actual estimado.</p>
+                </div>
+
+                <div class="gestion-transacciones">
+                    <h3><i class="fas fa-exchange-alt color-acento"></i> Últimas Transacciones</h3>
+                    <table class="listado-transacciones">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fas fa-calendar-alt"></i> Fecha</th>
+                                <th><i class="fas fa-file-alt"></i> Descripción</th>
+                                <th><i class="fas fa-credit-card"></i> Método de Pago</th>
+                                <th><i class="fas fa-sticky-note"></i> Nota</th>
+                                <th><i class="fas fa-arrow-down color-rojo"></i> Egreso</th> <th><i class="fas fa-arrow-up color-acento"></i> Ingreso</th>
+                                <th><i class="fas fa-cogs"></i> Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-transacciones">
+                            </tbody>
+                    </table>
+                </div>
+
+                <h3><i class="fas fa-plus-circle color-acento"></i> Nueva Transacción</h3>
+                <form id="form-nueva-transaccion">
+                    <div class="form-group">
+                        <label for="tipo-transaccion"><i class="fas fa-arrow-right color-acento"></i> Tipo:</label>
+                        <select id="tipo-transaccion" name="tipo-transaccion">
+                            <option value="ingreso">Ingreso</option>
+                            <option value="egreso">Egreso</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion-transaccion"><i class="fas fa-file-alt color-acento"></i> Descripción:</label>
+                        <input type="text" id="descripcion-transaccion" name="descripcion-transaccion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="monto-transaccion"><i class="fas fa-dollar-sign color-acento"></i> Monto:</label>
+                        <input type="number" id="monto-transaccion" name="monto-transaccion" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="metodo-pago-transaccion"><i class="fas fa-credit-card color-acento"></i> Método de Pago:</label>
+                        <input type="text" id="metodo-pago-transaccion" name="metodo-pago-transaccion">
+                    </div>
+                    <div class="form-group">
+                        <label for="nota-transaccion"><i class="fas fa-sticky-note color-acento"></i> Nota (opcional):</label>
+                        <input type="text" id="nota-transaccion" name="nota-transaccion">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-transaccion"><i class="fas fa-calendar-alt color-acento"></i> Fecha:</label>
+                        <input type="date" id="fecha-transaccion" name="fecha-transaccion">
+                    </div>
+                    <button type="submit"><i class="fas fa-save"></i> Registrar Transacción</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="container_s" id="perfil">
+            <div class="contenedor-perfil contenedor">
+                <h2><i class="fas fa-user-circle color-acento"></i> Perfil de Usuario</h2>
+
+                <div class="tarjeta-perfil-simple">
+                    <div class="avatar-contenedor">
+                        <img src="img/default-profile.png" alt="Foto de perfil" id="foto-perfil-vista">
+                        <div class="overlay">
+                            <label for="subir-avatar" class="boton-editar-avatar"><i class="fas fa-camera"></i> Cambiar Foto</label>
+                            <input type="file" id="subir-avatar" accept="image/*" style="display:none;">
+                        </div>
+                    </div>
+
+                    <div class="acciones-perfil">
+                        <button class="boton-editar"><i class="fas fa-edit"></i> Editar Perfil</button>
+                        <button class="boton-cambiar-contrasena"><i class="fas fa-key"></i> Cambiar Contraseña</button>
+                    </div>
+                </div>
+
+                <div id="modal-editar-perfil" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2><i class="fas fa-edit color-acento"></i> Editar Perfil</h2>
+                        <form id="form-editar-perfil">
+                            <div class="form-group">
+                                <label for="editar-nombre-usuario"><i class="fas fa-user"></i> Nombre de Usuario:</label>
+                                <input type="text" id="editar-nombre-usuario" name="nombre_usuario">
+                            </div>
+                            <div class="form-group">
+                                <label for="editar-correo-electronico"><i class="fas fa-envelope"></i> Correo Electrónico:</label>
+                                <input type="email" id="editar-correo-electronico" name="correo_electronico">
+                            </div>
+                            <button type="submit" class="boton-guardar"><i class="fas fa-save"></i> Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="modal-cambiar-contrasena" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2><i class="fas fa-key color-acento"></i> Cambiar Contraseña</h2>
+                        <form id="form-cambiar-contrasena">
+                            <div class="form-group">
+                                <label for="contrasena-actual"><i class="fas fa-lock"></i> Contraseña Actual:</label>
+                                <input type="password" id="contrasena-actual" name="contrasena_actual" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nueva-contrasena"><i class="fas fa-lock-open"></i> Nueva Contraseña:</label>
+                                <input type="password" id="nueva-contrasena" name="nueva_contrasena" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmar-nueva-contrasena"><i class="fas fa-check-double"></i> Confirmar Nueva Contraseña:</label>
+                                <input type="password" id="confirmar-nueva-contrasena" name="confirmar_nueva_contrasena" required>
+                            </div>
+                            <button type="submit" class="boton-guardar"><i class="fas fa-save"></i> Cambiar Contraseña</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GeestorApp - Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/almacen.js"></script>
+    <script src="js/contabilidad.js"></script>
+</body>
+</html>

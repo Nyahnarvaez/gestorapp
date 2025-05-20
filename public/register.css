@@ -1,0 +1,121 @@
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: "lato", sans-serif;
+}
+
+.auth-toggle {
+    text-align: center;
+    margin-top: 20px;
+}
+.auth-toggle a {
+    color: rgb(43, 61, 226);
+    text-decoration: none;
+}
+.auth-toggle a:hover {
+    text-decoration: underline;
+}
+.login-form {
+    display: none; /* Ocultar inicialmente el formulario de inicio de sesión */
+}
+
+
+.registro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form {
+    background-color: white;
+    width: 400px;
+    border-radius: 8px;
+    padding: 20px 40px;
+    border-top: solid rgba(141, 68, 173, 0.747);
+    border-bottom: solid rgba(175, 39, 233, 0.747);
+    box-shadow: 0 20px 30px rgba(79, 6, 110, 0.479);;
+}
+
+.title {
+    font-size: 42px;
+    margin-bottom: 50px;
+}
+
+.inputContainer {
+    position: relative;
+    height: 45px;
+    width: 90%;
+    margin-bottom: 17px;
+}
+.input {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #DADCE0;
+    border-radius: 7px;
+    font-size: 16px;
+    padding: 0 20px;
+    outline: none;
+    background: none;
+    z-index: 1;
+}
+
+::placeholder {
+    color: transparent;
+}
+
+.label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 0 4px;
+    background-color: white;
+    color: #DADCE0;
+    font-size: 16px;
+    transition: 0.5s;
+    z-index: 0;
+}
+
+.submitBtn {
+    display: block;
+    margin-left: auto;
+    padding: 15px 30px;
+    border: none;
+    background-color: #8e44ad;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 30px;
+}
+
+.submitBtn:hover {
+    background-color: rgb(162, 44, 212);
+    transform: translateY(-2px);
+}
+
+.input:focus {
+    border: 2px solid rgb(141, 68, 173);
+}
+
+.input:focus + .label {
+    top: -7px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(141, 68, 173);
+}
+
+.input:not(:placeholder-shown)+ .label {
+    top: -7px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+}

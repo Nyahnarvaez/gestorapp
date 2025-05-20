@@ -20,16 +20,14 @@ app.use(function(req, res, next) {
 });
 
 // --- Configuración de Express ---
-app.set("view engine", "ejs"); // Asegúrate de tener EJS instalado: npm install ejs
+app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.static("public")); // Sirve archivos estáticos (CSS, JS, imágenes) desde la carpeta 'public'
+app.use(express.static("public")); 
 app.use(express.json()); // Para parsear cuerpos de solicitud con formato JSON
 app.use(express.urlencoded({ extended: false })); // Para parsear cuerpos de solicitud con URL-encoded data (formularios)
 
 // --- Configuración de express-session ---
 app.use(session({
-    // El secreto de la sesión debe ser una cadena larga y aleatoria.
-    // ¡Configúrala como una variable de entorno en Railway (ej. SESSION_SECRET)!
     secret: process.env.SESSION_SECRET || 'un_secreto_muy_seguro_y_largo_por_defecto',
     resave: false, // Evita guardar la sesión si no ha cambiado
     saveUninitialized: true, // Guarda sesiones nuevas que aún no han sido modificadas
@@ -43,18 +41,14 @@ app.use(session({
 }));
 
 // --- MIDDLEWARE PARA CONTROL DE CACHÉ Y VERIFICACIÓN DE SESIÓN ---
-// Este middleware es crucial para prevenir el acceso a páginas protegidas
-// después de cerrar sesión o para controlar el caché del navegador.
 app.use(function(req, res, next) {
-    // Cabeceras HTTP para instruir al navegador a no almacenar la página en caché.
-    // Esto es vital para evitar que, al usar el botón "atrás" del navegador,
+    // Cabeceras HTTP para instruir al navegador a no almacenar la página en caché,
     // se muestre una versión en caché de una página que ya no debería ser accesible.
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
 
     // Define las rutas que requieren que el usuario esté autenticado (logueado).
-    // Si tu aplicación tiene más rutas protegidas, agrégalas aquí.
     const protectedPaths = [
         '/index',
         '/api/almacen',
@@ -80,9 +74,6 @@ app.use(function(req, res, next) {
 
 // --- Configuración de la Conexión a la Base de Datos MySQL ---
 // ¡Importante! En Railway, estas variables de entorno serán inyectadas automáticamente
-// con las credenciales de tu base de datos interna.
-// Para desarrollo local, si usas XAMPP u otra DB local, asegúrate de tener un archivo .env
-// con estos valores o cambia los valores por defecto aquí.
 let conexion = mysql.createConnection({
     host: process.env.MYSQLHOST || 'localhost', // 'mysql-udmu.railway.internal' en Railway
     database: process.env.MYSQLDATABASE || 'gestorapp', // 'railway' en Railway
@@ -95,9 +86,6 @@ let conexion = mysql.createConnection({
 conexion.connect(function (err) {
     if (err) {
         console.error('Error al conectar a la base de datos:', err.stack);
-        // Si la conexión falla, la aplicación no podrá funcionar correctamente.
-        // Considera salir del proceso para que Railway intente reiniciarla.
-        // process.exit(1);
     } else {
         console.log("Conexión a la base de datos MySQL exitosa!");
     }
@@ -105,32 +93,26 @@ conexion.connect(function (err) {
 
 // --- Rutas de Autenticación y Páginas Principales ---
 
-// Ruta raíz: Muestra el formulario de registro (o inicio de sesión si se pide).
 app.get("/", function (req, res) {
-    // 'register' asumo que es tu vista que incluye tanto el formulario de registro como el de login.
     res.render("register", { showLogin: req.query.showLogin === 'true' });
 });
 
 // Ruta para la página principal (index). Requiere sesión iniciada.
 app.get("/index", function (req, res) {
-    // Ya tenemos el middleware de protección, pero esta es una verificación adicional.
     if (req.session.loggedIn) {
-        // Pasa el nombre de usuario de la sesión a la vista para personalizar el saludo.
         res.render("index", { username: req.session.username || 'Usuario' });
     } else {
-        // En teoría, el middleware ya debería haber redirigido, pero esto es un fallback.
         res.redirect("/?showLogin=true");
     }
 });
 
-// Ruta para manejar el registro de un nuevo usuario.
 app.post("/validar", function (req, res) {
     console.log("Datos de registro recibidos:", req.body);
 
     const datos = req.body;
     const { user, email, pass, c_pass } = datos;
 
-    // --- Validaciones en el Servidor ---
+
     if (!user || !email || !pass || !c_pass) {
         return res.status(400).send("Todos los campos son requeridos.");
     }
@@ -152,8 +134,6 @@ app.post("/validar", function (req, res) {
         }
 
         // --- Insertar Nuevo Usuario en la Tabla 'usuario' ---
-        // Asegúrate de que el nombre de tu tabla de usuarios sea 'usuario' en Railway.
-        // Si usaste el SQL anterior, se llamaba 'usuario'.
         let registrar = `INSERT INTO usuario (nombre, correo, contrasenia) VALUES (?, ?, ?)`;
         conexion.query(registrar, [user, email, hashedPassword], function (error, results) {
             if (error) {
@@ -167,12 +147,6 @@ app.post("/validar", function (req, res) {
                 console.log("Usuario registrado correctamente, ID:", results.insertId);
 
                 const nuevoUsuarioId = results.insertId;
-
-                // --- Creación de Tablas Personalizadas para el Nuevo Usuario ---
-                // Esto es una lógica compleja y debería manejarse con cuidado.
-                // Asegúrate de que tu base de datos permita la creación de tablas dinámicas.
-
-                // Crear la tabla de almacén para el nuevo usuario
                 const nombreTablaAlmacen = `almacen_${nuevoUsuarioId}`;
                 const crearTablaAlmacen = `
                     CREATE TABLE ${nombreTablaAlmacen} (
@@ -193,8 +167,6 @@ app.post("/validar", function (req, res) {
                         return res.status(500).send("Error al crear la tabla de almacén del usuario.");
                     } else {
                         console.log(`Tabla de almacén '${nombreTablaAlmacen}' creada para el usuario ${nuevoUsuarioId}`);
-
-                        // Crear la tabla de contabilidad para el nuevo usuario
                         const nombreTablaContabilidad = `contabilidad_${nuevoUsuarioId}`;
                         const crearTablaContabilidad = `
                             CREATE TABLE ${nombreTablaContabilidad} (
@@ -215,7 +187,6 @@ app.post("/validar", function (req, res) {
                             } else {
                                 console.log(`Tabla de contabilidad '${nombreTablaContabilidad}' creada para el usuario ${nuevoUsuarioId}`);
 
-                                // Crear la tabla de fondos para el nuevo usuario
                                 const nombreTablaFondos = `fondos_${nuevoUsuarioId}`;
                                 const crearTablaFondos = `
                                     CREATE TABLE ${nombreTablaFondos} (
@@ -317,8 +288,6 @@ app.get("/logout", function (req, res) {
 });
 
 // --- Rutas de API para Gestión de Almacén ---
-
-// Obtener todos los productos del almacén del usuario logueado.
 app.get("/api/almacen", function (req, res) {
     if (!req.session.loggedIn || !req.session.userId) {
         return res.status(401).json({ error: "Usuario no autenticado." });
@@ -609,7 +578,6 @@ app.delete("/api/contabilidad/:id", function (req, res) {
 // --- Inicio del Servidor ---
 app.listen(port, function () {
     console.log(`Servidor Express escuchando en el puerto ${port}`);
-    // En Railway, este puerto será el expuesto al exterior.
     if (process.env.NODE_ENV !== 'production') {
         console.log(`Puedes acceder a tu aplicación localmente en http://localhost:${port}`);
     }

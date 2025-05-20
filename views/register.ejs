@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GestorApp - Registro/Iniciar Sesión</title>
+    <link rel="stylesheet" href="/register.css">
+    <link rel="icon" href="img/icon.png" type="image/png">
+</head>
+<body>
+
+    <div class="registro">
+        <div class="registro-form">
+            <form action="/validar" method="post" class="form">
+                <h1 class="title">Registro GestorApp</h1>
+
+                <div class="inputContainer">
+                    <input type="text" class="input" placeholder="a" id="user" name="user" required>
+                    <label for="user" class="label">Username</label>
+                </div>
+
+                <div class="inputContainer">
+                    <input type="email" class="input" placeholder="a" id="email" name="email" required>
+                    <label for="email" class="label">Email</label>
+                </div>
+
+                <div class="inputContainer">
+                    <input type="password" class="input" placeholder="a" id="pass" name="pass" required>
+                    <label for="pass" class="label">Password</label>
+                </div>
+
+                <div class="inputContainer">
+                    <input type="password" class="input" placeholder="a" id="c_pass" name="c_pass" required>
+                    <label for="c_pass" class="label">Confirm Password</label>
+                </div>
+
+                <input type="submit" class="submitBtn" value="Registrar">
+            </form>
+            <div class="auth-toggle">
+                <a href="#" id="showLogin">¿Ya tienes una cuenta? Iniciar Sesión</a>
+            </div>
+        </div>
+
+        <div class="login-form">
+            <form action="/login" method="post" class="form">
+                <h1 class="title">Iniciar Sesión</h1>
+
+                <div class="inputContainer">
+                    <input type="email" class="input" placeholder="a" id="loginEmail" name="email" required>
+                    <label for="loginEmail" class="label">Email</label>
+                </div>
+
+                <div class="inputContainer">
+                    <input type="password" class="input" placeholder="a" id="loginPassword" name="password" required>
+                    <label for="loginPassword" class="label">Password</label>
+                </div>
+
+                <input type="submit" class="submitBtn" value="Iniciar Sesión">
+            </form>
+            <div class="auth-toggle">
+                <a href="#" id="showRegister">¿No tienes una cuenta? Regístrate</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const showLoginLink = document.getElementById('showLogin');
+            const showRegisterLink = document.getElementById('showRegister');
+            const registroForm = document.querySelector('.registro-form');
+            const loginForm = document.querySelector('.login-form');
+
+            if (showLoginLink) {
+                showLoginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    registroForm.style.display = 'none';
+                    loginForm.style.display = 'block';
+                });
+            }
+
+            if (showRegisterLink) {
+                showRegisterLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginForm.style.display = 'none';
+                    registroForm.style.display = 'block';
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
