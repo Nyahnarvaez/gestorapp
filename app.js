@@ -75,17 +75,21 @@ app.use(function(req, res, next) {
 // --- Configuración de la Conexión a la Base de Datos MySQL ---
 // ¡Importante! En Railway, estas variables de entorno serán inyectadas automáticamente
 let conexion = mysql.createConnection({
-    host: process.env.MYSQLHOST || 'localhost', // 'mysql-udmu.railway.internal' en Railway
-    database: process.env.MYSQLDATABASE || 'gestorapp', // 'railway' en Railway
-    user: process.env.MYSQLUSER || 'root', // 'root' en Railway
-    password: process.env.MYSQLPASSWORD || '', // 'dDHJOlVUyxFeZSBAujpYfqZfVSrgnROG' en Railway
-    port: process.env.MYSQLPORT || 3306 // '3306' en Railway
+    host: process.env.MYSQLHOST || 'localhost',
+    database: process.env.MYSQLDATABASE || 'gestorapp',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '',
+    port: process.env.MYSQLPORT || 3306,
+    // --- AÑADE ESTA LÍNEA PARA RECONEXIÓN AUTOMÁTICA ---
+    reconnect: true 
 });
 
 // Intentar conectar a la base de datos
 conexion.connect(function (err) {
     if (err) {
         console.error('Error al conectar a la base de datos:', err.stack);
+        // Si hay un error fatal aquí, podrías querer terminar el proceso para que Render lo reinicie.
+        // process.exit(1); 
     } else {
         console.log("Conexión a la base de datos MySQL exitosa!");
     }
@@ -141,6 +145,13 @@ app.post("/validar", function (req, res) {
                 if (error.code === 'ER_DUP_ENTRY') {
                     // Si el correo ya existe (violación de UNIQUE constraint)
                     return res.status(409).send("El correo electrónico ya existe.");
+                }
+                // Manejo de otros errores de conexión/query
+                if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                    console.error("Conexión a la base de datos perdida. Intentando reconectar...");
+                    // Aquí podrías intentar reestablecer la conexión o devolver un error amigable.
+                    // Con 'reconnect: true', esto debería ser manejado por el driver.
+                    return res.status(500).send("Error temporal de conexión. Por favor, inténtalo de nuevo.");
                 }
                 return res.status(500).send("Error al registrar el usuario.");
             } else {
@@ -240,6 +251,11 @@ app.post("/login", function (req, res) {
     conexion.query(consulta, [email], function (error, results) {
         if (error) {
             console.error("Error al buscar usuario para inicio de sesión:", error);
+            // Manejo de errores de conexión
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                console.error("Conexión a la base de datos perdida. Intentando reconectar...");
+                return res.status(500).send("Error temporal de conexión. Por favor, inténtalo de nuevo.");
+            }
             return res.status(500).send("Error al iniciar sesión.");
         }
 
@@ -299,6 +315,9 @@ app.get("/api/almacen", function (req, res) {
     conexion.query(consultaAlmacen, function (error, resultados) {
         if (error) {
             console.error("Error al obtener datos del almacén:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al obtener los datos del almacén." });
         }
         res.json(resultados);
@@ -335,6 +354,9 @@ app.post("/api/almacen/nuevo", function (req, res) {
     conexion.query(consultaInsertar, nuevoProducto, function (error, resultado) {
         if (error) {
             console.error("Error al insertar nuevo producto:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al guardar el nuevo producto." });
         }
         console.log("Nuevo producto insertado con ID:", resultado.insertId);
@@ -356,6 +378,9 @@ app.get("/api/almacen/:id", function (req, res) {
     conexion.query(consultaProducto, [productoId], function (error, resultado) {
         if (error) {
             console.error("Error al obtener el producto:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al obtener el producto." });
         }
 
@@ -394,6 +419,9 @@ app.put("/api/almacen/:id", function (req, res) {
     conexion.query(consultaActualizar, [codigo_producto || null, nombre, cantidad, precio, fecha || new Date(), productoId], function (error, resultado) {
         if (error) {
             console.error("Error al actualizar el producto:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al actualizar el producto." });
         }
 
@@ -420,6 +448,9 @@ app.delete("/api/almacen/:id", function (req, res) {
     conexion.query(consultaEliminar, [productoId], function (error, resultado) {
         if (error) {
             console.error("Error al eliminar el producto:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al eliminar el producto." });
         }
 
@@ -447,6 +478,9 @@ app.get("/api/contabilidad/saldo", function (req, res) {
     conexion.query(consultaSaldo, function (error, resultado) {
         if (error) {
             console.error("Error al obtener el saldo:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al obtener el saldo." });
         }
         res.json({ saldo: resultado[0]?.saldo || 0 }); // Retorna 0 si no hay saldo o es nulo
@@ -466,6 +500,9 @@ app.get("/api/contabilidad", function (req, res) {
     conexion.query(consultaContabilidad, function (error, resultados) {
         if (error) {
             console.error("Error al obtener datos de contabilidad:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al obtener los datos de contabilidad." });
         }
         res.json(resultados);
@@ -503,6 +540,9 @@ app.post("/api/contabilidad/nueva", function (req, res) {
     conexion.query(`INSERT INTO ${nombreTablaContabilidad} SET ?`, nuevaTransaccion, function (error, resultado) {
         if (error) {
             console.error("Error al guardar la transacción:", error);
+            if (error.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al guardar la transacción." });
         }
 
@@ -540,6 +580,9 @@ app.delete("/api/contabilidad/:id", function (req, res) {
     conexion.query(`SELECT tipo, monto FROM ${nombreTablaContabilidad} WHERE id = ?`, [transaccionId], function (errorConsulta, resultadoConsulta) {
         if (errorConsulta) {
             console.error("Error al obtener la transacción para eliminar:", errorConsulta);
+            if (errorConsulta.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+            }
             return res.status(500).json({ error: "Error al obtener la transacción." });
         }
 
@@ -557,6 +600,9 @@ app.delete("/api/contabilidad/:id", function (req, res) {
         conexion.query(`DELETE FROM ${nombreTablaContabilidad} WHERE id = ?`, [transaccionId], function (errorEliminar) {
             if (errorEliminar) {
                 console.error("Error al eliminar la transacción:", errorEliminar);
+                if (errorEliminar.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+                    return res.status(500).json({ error: "Error temporal de conexión. Por favor, inténtalo de nuevo." });
+                }
                 return res.status(500).json({ error: "Error al eliminar la transacción." });
             }
 
