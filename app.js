@@ -1,11 +1,12 @@
 // app.js
-
 require('dotenv').config();
 
 const mysql = require("mysql2");
 const express = require("express");
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session); // <--- Nuevo: Almacén de sesiones de MySQL
+
 const app = express();
 const path = require('path');
 const port = process.env.PORT || 3000;
@@ -23,15 +24,60 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Necesario para Render (y otros entornos en la nube) donde la aplicación
+// está detrás de un proxy inverso. Permite que Express confíe en los encabezados
+// como 'X-Forwarded-For' y 'X-Forwarded-Proto'.
+app.set('trust proxy', 1);
+
+// --- Configuración del Pool de Conexiones a la Base de Datos MySQL ---
+const dbConfig = {
+    host: process.env.MYSQLHOST || 'localhost',
+    database: process.env.MYSQLDATABASE || 'gestorapp',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '',
+    port: process.env.MYSQLPORT || 3306,
+    connectionLimit: 10
+};
+
+const dbPool = mysql.createPool(dbConfig); // Usamos dbConfig para el pool
+
+dbPool.getConnection(function(err, connection) {
+    if (err) {
+        console.error('Error al obtener conexión del pool:', err.stack);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            console.error('La conexión a la base de datos se perdió.');
+        } else if (err.code === 'ER_CON_COUNT_ERROR') {
+            console.error('Demasiadas conexiones activas en el pool.');
+        } else if (err.code === 'ECONNREFUSED') {
+            console.error('La conexión a la base de datos fue rechazada.');
+        }
+    } else {
+        console.log("Pool de conexiones a la base de datos MySQL iniciado exitosamente!");
+        connection.release();
+    }
+});
+
+// --- Configuración del MySQLStore para Sesiones ---
+// MySQLStore creará automáticamente la tabla 'sessions' en tu DB si no existe.
+const sessionStore = new MySQLStore(dbConfig); // <--- Nuevo: Usa la misma configuración de DB para el almacén de sesiones
+
 // --- Configuración de express-session ---
 app.use(session({
     secret: process.env.SESSION_SECRET || 'un_secreto_muy_seguro_y_largo_por_defecto',
     resave: false,
     saveUninitialized: true,
+    store: sessionStore, // <--- CAMBIO CLAVE: Usa el almacén de MySQL
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production', // true en Render (HTTPS)
         httpOnly: true,
-        maxAge: 3600000
+        maxAge: 3600000, // 1 hora
+        sameSite: 'None', // Requerido para Secure: true en ciertos escenarios de cross-site (aunque aquí es same-site, es robusto)
+        // ********************************************************************************
+        // MUY IMPORTANTE: CAMBIA 'gestorapp-n.onrender.com' por el dominio exacto de tu app en Render.
+        // Si tu app es 'https://mi-aplicacion.onrender.com', entonces usa 'mi-aplicacion.onrender.com'
+        // Si no funciona con el subdominio completo, prueba con el dominio raíz '.onrender.com'
+        // ********************************************************************************
+        domain: 'gestorapp-n.onrender.com' // <--- CAMBIO CLAVE: Especifica el dominio de la cookie
     }
 }));
 
@@ -59,32 +105,6 @@ app.use(function(req, res, next) {
         return res.redirect('/?showLogin=true');
     }
     next();
-});
-
-// --- Configuración del Pool de Conexiones a la Base de Datos MySQL ---
-const dbPool = mysql.createPool({
-    host: process.env.MYSQLHOST || 'localhost',
-    database: process.env.MYSQLDATABASE || 'gestorapp',
-    user: process.env.MYSQLUSER || 'root',
-    password: process.env.MYSQLPASSWORD || '',
-    port: process.env.MYSQLPORT || 3306,
-    connectionLimit: 10
-});
-
-dbPool.getConnection(function(err, connection) {
-    if (err) {
-        console.error('Error al obtener conexión del pool:', err.stack);
-        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-            console.error('La conexión a la base de datos se perdió.');
-        } else if (err.code === 'ER_CON_COUNT_ERROR') {
-            console.error('Demasiadas conexiones activas en el pool.');
-        } else if (err.code === 'ECONNREFUSED') {
-            console.error('La conexión a la base de datos fue rechazada.');
-        }
-    } else {
-        console.log("Pool de conexiones a la base de datos MySQL iniciado exitosamente!");
-        connection.release();
-    }
 });
 
 // --- Rutas de Autenticación y Páginas Principales ---
@@ -212,9 +232,6 @@ app.post("/validar", function (req, res) {
                                                     req.session.loggedIn = true;
                                                     req.session.userId = nuevoUsuarioId;
                                                     req.session.username = user;
-                                                    // **********************************************
-                                                    // CAMBIO CLAVE AQUÍ: Guardar la sesión explícitamente
-                                                    // **********************************************
                                                     req.session.save((err) => {
                                                         if (err) {
                                                             console.error("Error al guardar la sesión después del registro:", err);
@@ -277,9 +294,6 @@ app.post("/login", function (req, res) {
                     req.session.loggedIn = true;
                     req.session.userId = usuario.id;
                     req.session.username = usuario.nombre;
-                    // **********************************************
-                    // CAMBIO CLAVE AQUÍ: Guardar la sesión explícitamente
-                    // **********************************************
                     req.session.save((err) => {
                         if (err) {
                             console.error("Error al guardar la sesión después del login:", err);
