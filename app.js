@@ -212,7 +212,16 @@ app.post("/validar", function (req, res) {
                                                     req.session.loggedIn = true;
                                                     req.session.userId = nuevoUsuarioId;
                                                     req.session.username = user;
-                                                    return res.redirect("/index");
+                                                    // **********************************************
+                                                    // CAMBIO CLAVE AQUÍ: Guardar la sesión explícitamente
+                                                    // **********************************************
+                                                    req.session.save((err) => {
+                                                        if (err) {
+                                                            console.error("Error al guardar la sesión después del registro:", err);
+                                                            return res.status(500).send("Error al iniciar sesión automáticamente después del registro.");
+                                                        }
+                                                        return res.redirect("/index");
+                                                    });
                                                 }
                                             });
                                         }
@@ -268,7 +277,16 @@ app.post("/login", function (req, res) {
                     req.session.loggedIn = true;
                     req.session.userId = usuario.id;
                     req.session.username = usuario.nombre;
-                    return res.redirect("/index");
+                    // **********************************************
+                    // CAMBIO CLAVE AQUÍ: Guardar la sesión explícitamente
+                    // **********************************************
+                    req.session.save((err) => {
+                        if (err) {
+                            console.error("Error al guardar la sesión después del login:", err);
+                            return res.status(500).send("Error al iniciar sesión. Inténtalo de nuevo.");
+                        }
+                        return res.redirect("/index");
+                    });
                 } else {
                     return res.status(401).send("Credenciales incorrectas.");
                 }
